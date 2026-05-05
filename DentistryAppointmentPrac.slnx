@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DentistryAppointmentPrac.API/DentistryAppointmentPrac.API.csproj" />
+  <Project Path="DentistryAppointmentPrac.Shared/DentistryAppointmentPrac.Shared.csproj" />
+</Solution>
