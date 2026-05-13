@@ -1,11 +1,12 @@
-﻿using DentistryAppointmentPrac.Shared.Interfaces;
+﻿using DentistryAppointmentPrac.Shared.BusinessLogic.Interfaces;
+using DentistryAppointmentPrac.Shared.Interfaces;
 using DentistryAppointmentPrac.Shared.Models;
 using DentistryAppointmentPrac.Shared.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DentistryAppointmentPrac.Shared.BusinessLogic.Interfaces
+namespace DentistryAppointmentPrac.Shared.BusinessLogic
 {
     public class BaseWriteableImplementation<T, TResponse, TSummary, TRequest>(IBaseWriteableRepository<T, TSummary> repository) : BaseReadableImplementation<T, TResponse, TSummary>(repository), IWriteableImplementation<T, TResponse, TSummary, TRequest>
         where T : BaseModel

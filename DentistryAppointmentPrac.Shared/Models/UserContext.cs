@@ -10,6 +10,6 @@ namespace DentistryAppointmentPrac.Shared.Models
         public string User { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public Guid DentistDepartmentId { get; set; }
-        public List<string> Permissions { get; set; } = [];
+        public List<PermissionEnum> Permissions { get; set; } = [];
     }
 }

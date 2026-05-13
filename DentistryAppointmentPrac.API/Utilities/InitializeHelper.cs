@@ -1,0 +1,104 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+using FluentValidation;
+using System.Text;
+using DentistryAppointmentPrac.Shared.Repository.Interfaces;
+using DentistryAppointmentPrac.API.Utilities.DatabaseContext;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using DentistryAppointmentPrac.Shared.BusinessLogic;
+
+namespace DentistryAppointmentPrac.API.Utilities
+{
+    internal static class InitializeHelper
+    {
+        internal static void InitializeAuthentication(WebApplicationBuilder builder)
+        {
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "MultiScheme";
+                options.DefaultChallengeScheme = "MultiScheme";
+            })
+                    .AddPolicyScheme("MultiScheme", "Multi Scheme", options =>
+                    {
+                        options.ForwardDefaultSelector = context =>
+                        {
+                            return "AzureB2C";
+                        };
+                    })
+                    .AddJwtBearer("Manual", options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"] ?? "")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
+            })
+            .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"), jwtBearerScheme: "AzureB2C");
+            builder.Services.Configure<JwtBearerOptions>("AzureB2C", options =>
+            {
+                var existingHandler = options.Events?.OnMessageReceived;
+                options.Events = new JwtBearerEvents();
+            });
+        }
+
+        internal static void InitializeRepositories(WebApplicationBuilder builder)
+        {
+            var connectionString = builder.Configuration["ConnectionStrings:DentistryConnectionString"];
+            if (string.IsNullOrEmpty(connectionString)) {
+                throw new InvalidOperationException("Please provide a connection string in appsettings or environment variables");
+            }
+            builder.Services.AddDbContext<DentistAppointmentContext>((serviceProvider, options) =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+        }
+
+        internal static void InitializeAppsettingsAndEnvironmentVariables(WebApplicationBuilder builder)
+        {
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                   .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                builder.Configuration.AddEnvironmentVariables();
+
+                //string keyVaultUri = builder.Configuration["KeyVaultUrl"];
+                //builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
+            }
+        }
+
+        internal static void InitilizeStorageServices(WebApplicationBuilder builder)
+        {
+            var connectionString = builder.Configuration["Storage:ConnectionString"];
+            var containerString = builder.Configuration["Storage:Container"];
+            var publicConnectionString = builder.Configuration["Storage:PublicConnectionString"];
+            var publicContainerString = builder.Configuration["Storage:PublicContainer"];
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                builder.Services.AddSingleton(_ =>
+                {
+                    return new PrivateClient(new BlobServiceClient(connectionString).GetBlobContainerClient(containerString ?? "documents"));
+                });
+
+                if (!string.IsNullOrEmpty(publicConnectionString))
+                {
+                    builder.Services.AddSingleton(_ =>
+                    {
+                        return new PublicClient(new BlobServiceClient(publicConnectionString).GetBlobContainerClient(publicContainerString ?? "logos"));
+                    });
+                }
+                //builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+                //builder.Services.AddScoped<IDocumentImplementation, DocumentImplementation>();
+            }
+        }
+    }
+}
