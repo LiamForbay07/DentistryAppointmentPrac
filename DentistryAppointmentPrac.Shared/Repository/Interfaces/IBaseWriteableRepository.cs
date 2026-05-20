@@ -12,7 +12,7 @@ namespace DentistryAppointmentPrac.Shared.Repository.Interfaces
     {
         void AddItemAsync(T entity);
         Task AddRangeAsync(List<T> entities);
-        Task DeleteItemAsync(Guid id);
+        Task<bool> DeleteItemAsync(Guid id);
         void UpdateItemAsync(T entity);
         void UpdateRangeItems(params T[] entities);
         Task<int> ApplySaveChangesAsync();

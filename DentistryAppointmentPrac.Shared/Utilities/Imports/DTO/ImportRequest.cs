@@ -16,6 +16,7 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Imports.DTO
         public char? SelectedFileDelimiter { get; set; }
         public bool QuickImport { get; set; } = false; //skips queue process
         public bool PartialImport { get; set; } = false;
+        public ImportType ImportType { get; set; }
         public static ImportProcess ToEntity(ImportRequest request)
         {
             if (request == null) return new();
@@ -29,7 +30,8 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Imports.DTO
                 IsDeleted = false,
                 FileDelimiter = request.SelectedFileDelimiter,
                 PartialImport = request.PartialImport,
-                QuickImport = request.QuickImport
+                QuickImport = request.QuickImport,
+                Type = request.ImportType
             };
         }
     }

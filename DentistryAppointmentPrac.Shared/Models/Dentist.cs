@@ -8,6 +8,9 @@ namespace DentistryAppointmentPrac.Shared.Models
     {
         public Guid UserId { get; set; }
         public List<DentalSpecializationEnum> Specialization { get; set; } = [];
+        public string EmployeeNumber { get; set; } = string.Empty;
+        public string EmployeeIdNumber { get; set; } = string.Empty;
+
         public User? User { get; set; }
         
     }

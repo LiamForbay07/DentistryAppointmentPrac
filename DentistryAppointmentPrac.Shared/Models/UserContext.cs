@@ -6,6 +6,8 @@ namespace DentistryAppointmentPrac.Shared.Models
 {
     public class UserContext
     {
+        public string? TechSupportId { get; set; }
+        public string? TechSupportUserName { get; set; }
         public string UserId { get; set; } = string.Empty;
         public string User { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;

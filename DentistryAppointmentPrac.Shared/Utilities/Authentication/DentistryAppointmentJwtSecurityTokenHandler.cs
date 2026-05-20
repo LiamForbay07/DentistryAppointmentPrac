@@ -11,7 +11,9 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication
 {
     public static class DentistryAppointmentJwtSecurityTokenHandler
     {
-        public static string GenerateToken(IConfiguration configuration, string userId, Guid? dentalDepartmentId)
+        public const string TechSupportIdClaim = "super_user_id"; //Tech support is the only super user
+        public const string TechSupportUserNameClaim = "super_user_name";
+        public static string GenerateToken(IConfiguration configuration, string userId, Guid? dentalDepartmentId, string? superUserId = null, string? superUserName = null)
         {
             var jwtSection = configuration["JWT:Key"];
             var expires = configuration["JWT:ExpiresInMinutes"];
@@ -20,13 +22,19 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userId),
+                new(ClaimTypes.Name, userId),
             };
 
             if (dentalDepartmentId != null)
                 claims = [.. claims, new Claim(ClaimTypes.Role, dentalDepartmentId.ToString() ?? "")];
+
+            if (!string.IsNullOrEmpty(superUserId))
+            {
+                claims.Add(new Claim(TechSupportIdClaim, superUserId));
+                claims.Add(new Claim(TechSupportUserNameClaim, superUserName ?? ""));
+            }
 
             var token = new JwtSecurityToken(
                 claims:claims,

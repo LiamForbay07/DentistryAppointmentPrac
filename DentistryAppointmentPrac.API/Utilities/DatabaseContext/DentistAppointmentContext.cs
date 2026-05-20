@@ -9,6 +9,7 @@ namespace DentistryAppointmentPrac.API.Utilities.DatabaseContext
     {
         protected readonly UserContext _userContext = userContext;
 
+        public DbSet<OfflineFile> OfflineFile { get; set; }
         public DbSet<DentalAppointment> DentalAppointment { get; set; }
         public DbSet<Dentist> Dentist { get; set; }
         public DbSet<RoomDetails> RoomDetails { get; set; }

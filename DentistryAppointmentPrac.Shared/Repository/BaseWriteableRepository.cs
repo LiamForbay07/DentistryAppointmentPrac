@@ -17,19 +17,20 @@ namespace DentistryAppointmentPrac.Shared.Repository
             _dbSet.Update(entity);
         }
 
-        public async Task DeleteItemAsync(Guid id)
+        public async Task<bool> DeleteItemAsync(Guid id)
         {
             var entity = await GetTrackedItemByIdAsync(id);
-
+            bool result;
             if (entity != null)
             {
-                entity.IsDeleted = false;
-                await _dbContext.SaveChangesAsync();
+                entity.IsDeleted = true;
+                result = await _dbContext.SaveChangesAsync() > 0;
             }
             else
             {
                 throw new Exception("Model not found");
             }
+            return result;
         }
 
         public void AddItemAsync(T entity)

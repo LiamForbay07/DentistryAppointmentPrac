@@ -10,6 +10,14 @@ using DentistryAppointmentPrac.API.Utilities.DatabaseContext;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using DentistryAppointmentPrac.Shared.BusinessLogic;
+using DentistryAppointmentPrac.Shared.Interfaces;
+using DentistryAppointmentPrac.Shared.Utilities.Middleware;
+using DentistryAppointmentPrac.Shared.Utilities.Authentication.Interfaces;
+using DentistryAppointmentPrac.Shared.Utilities.Authentication.BusinessLogic;
+using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
+using DentistryAppointmentPrac.Shared.Users.Interfaces;
+using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
+using DentistryAppointmentPrac.Shared.DentalAppointments;
 
 namespace DentistryAppointmentPrac.API.Utilities
 {
@@ -59,6 +67,10 @@ namespace DentistryAppointmentPrac.API.Utilities
             {
                 options.UseSqlServer(connectionString);
             });
+
+            builder.Services.AddScoped<IUserBaseRepository, UserBaseRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IUserRepository, UserRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IDentalAppointmentRepository, DentalAppointmentRepository<DentistAppointmentContext>>();
         }
 
         internal static void InitializeAppsettingsAndEnvironmentVariables(WebApplicationBuilder builder)
@@ -76,7 +88,7 @@ namespace DentistryAppointmentPrac.API.Utilities
             }
         }
 
-        internal static void InitilizeStorageServices(WebApplicationBuilder builder)
+        internal static void InitilizeStorageServices(WebApplicationBuilder builder) //Use once azure is set up
         {
             var connectionString = builder.Configuration["Storage:ConnectionString"];
             var containerString = builder.Configuration["Storage:Container"];
@@ -99,6 +111,19 @@ namespace DentistryAppointmentPrac.API.Utilities
                 //builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
                 //builder.Services.AddScoped<IDocumentImplementation, DocumentImplementation>();
             }
+        }
+
+        internal static void InitializeBusinessLogic(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<IDentalAppointmentService, DentalAppointmentService>();
+        }
+
+        internal static void InitializeServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
+            builder.Services.AddScoped<IAuthorizationHandler, UserContextHandler>();
         }
     }
 }
