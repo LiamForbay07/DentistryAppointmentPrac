@@ -6,9 +6,9 @@ using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.Models.DbConfigurations
 {
-    public class RoomDetailDbConfiguration : IEntityTypeConfiguration<RoomDetails>
+    public class RoomDetailDbConfiguration : IEntityTypeConfiguration<RoomDetail>
     {
-        public void Configure(EntityTypeBuilder<RoomDetails> builder)
+        public void Configure(EntityTypeBuilder<RoomDetail> builder)
         {
             throw new NotImplementedException();
         }

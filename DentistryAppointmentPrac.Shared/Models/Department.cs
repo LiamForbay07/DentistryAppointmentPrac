@@ -8,7 +8,7 @@ namespace DentistryAppointmentPrac.Shared.Models
     {
         public string Name { get; set; } = string.Empty;
         //Review these collections:
-        public ICollection<RoomDetails> Rooms { get; set; } = [];
-        public virtual ICollection<Dentist> Dentists { get; set; } = [];
+        public ICollection<RoomDetail> Rooms { get; set; } = [];
+        public ICollection<Dentist> Dentists { get; set; } = [];
     }
 }

@@ -12,7 +12,7 @@ namespace DentistryAppointmentPrac.API.Utilities.DatabaseContext
         public DbSet<OfflineFile> OfflineFile { get; set; }
         public DbSet<DentalAppointment> DentalAppointment { get; set; }
         public DbSet<Dentist> Dentist { get; set; }
-        public DbSet<RoomDetails> RoomDetails { get; set; }
+        public DbSet<RoomDetail> RoomDetails { get; set; }
         public DbSet<Patient> Patient { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<DocumentModel> Document { get; set; }
@@ -58,7 +58,7 @@ namespace DentistryAppointmentPrac.API.Utilities.DatabaseContext
                 UserId = userId
             });
 
-            modelBuilder.Entity<RoomDetails>().HasData(new RoomDetails()
+            modelBuilder.Entity<RoomDetail>().HasData(new RoomDetail()
             {
                 Id = roomDetailsId,
                 AvailableTimes = ["9:00-9:30", "9:30-10:00", "10:00-10:30", "10:30-11:00", "11:00-11:30", "13:00-13:30", "13:30-14:00"],
