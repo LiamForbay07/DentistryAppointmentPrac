@@ -5,6 +5,7 @@ using DentistryAppointmentPrac.Shared.Documents.DTO;
 using DentistryAppointmentPrac.Shared.Documents.Interfaces;
 using DentistryAppointmentPrac.Shared.Documents.Repository;
 using DentistryAppointmentPrac.Shared.Models;
+using DentistryAppointmentPrac.Shared.OfflineFiles.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.Documents.BusinessLogic
 {
-    public class DocumentService(IDocumentRepository repository, PrivateClient privateClient, UserContext userContext, PublicClient? publicClient) : BaseWriteableImplementation<DocumentModel, DocumentSummary, DocumentSummary, DocumentRequest>(repository), IDocumentService
+    //Can do online and offline files
+    public class DocumentService(IDocumentRepository repository,IOfflineFileRepository offlineFileRepo, PrivateClient privateClient, UserContext userContext, PublicClient? publicClient) : BaseWriteableImplementation<DocumentModel, DocumentSummary, DocumentSummary, DocumentRequest>(repository), IDocumentService
     {
         public async Task<string> DownloadFile(Guid id)
         {
@@ -37,9 +39,55 @@ namespace DentistryAppointmentPrac.Shared.Documents.BusinessLogic
             return sasUri.ToString();
         }
 
-        public Task<string> DownloadQuickImport(Guid id)
+        public async Task<string> DownloadQuickImport(Guid documentId)
         {
-            throw new NotImplementedException(); //From File System
+            var offlineDocument = await offlineFileRepo.FindSingleItemByFilterAsync(x => x.DocumentId == documentId) ??
+                                  throw new ArgumentNullException("Document no found");
+
+            var filePath = Directory.CreateDirectory(Directory.GetCurrentDirectory()).ToString();
+            
+            var fullFilePath = Path.Combine(filePath, offlineDocument.FileName);
+            File.WriteAllBytes(fullFilePath, offlineDocument.Data);
+
+            return fullFilePath;
+        }
+        
+        public async Task<string> UploadQuickImport(IFormFile file)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            var document = new DocumentModel
+            {
+                Id = Guid.NewGuid(),
+                ContentType = file.ContentType,
+                FileSize = file.Length,
+                CreatedDate = DateTime.UtcNow,
+                DocumentEntry = file.FileName + "LocalEntry",
+                DocumentName = file.FileName,
+                HasOfflineBackup = true,
+                UpdatedBy = userContext.Username,
+                UpdatedById = Guid.Parse(userContext.UserId)
+            };
+
+            var fileRecord = new OfflineFile
+            {
+                FileName = file.FileName,
+                FileSize = file.Length,
+                CreatedDate = DateTime.UtcNow,
+                Data = ms.ToArray(),
+                UpdatedBy = userContext.Username,
+                UpdatedById = Guid.Parse(userContext.UserId),
+                DocumentId = document.Id 
+            };
+
+            repository.AddItemAsync(document);
+            await repository.ApplySaveChangesAsync();
+
+            offlineFileRepo.AddItemAsync(fileRecord);
+
+            var result = await offlineFileRepo.ApplySaveChangesAsync() > 0;
+            return result ? "Successfully uploaded file" : "Failed to upload file";
         }
 
         public async Task<DocumentModel?> GetDocument(Guid id)

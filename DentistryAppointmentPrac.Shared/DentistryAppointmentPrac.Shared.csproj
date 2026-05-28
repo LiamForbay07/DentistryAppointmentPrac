@@ -37,6 +37,8 @@
   <ItemGroup>
     <Folder Include="DentalAppointments\BusinessLogic\Interfaces\" />
     <Folder Include="DentalAppointments\Configuration\" />
+    <Folder Include="OfflineFiles\BusinessLogic\" />
+    <Folder Include="OfflineFiles\Repository\" />
     <Folder Include="Patients\Configuration\" />
   </ItemGroup>
 

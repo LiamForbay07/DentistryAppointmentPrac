@@ -8,26 +8,63 @@ using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.RoomDetails.BusinessLogic
 {
-    public class RoomService(IRoomRepository repository) : BaseWriteableImplementation<RoomDetail, RoomDetailResponseSummary, RoomDetailResponseSummary, RoomDetailsRequest>(repository), IRoomService
+    public class RoomService(IRoomRepository repository, UserContext userContext) : BaseWriteableImplementation<RoomDetail, RoomDetailResponseSummary, RoomDetailResponseSummary, RoomDetailsRequest>(repository), IRoomService
     {
-        public Task<string> CreateRoom(RoomDetailsRequest request)
+        public async Task<string> CreateRoom(RoomDetailsRequest request)
         {
-            throw new NotImplementedException();
+            if(request == null) throw new ArgumentNullException(nameof(request));
+
+            var model = RoomDetailsRequest.ToEntity(request);
+            model.UpdatedBy = userContext.Username;
+            model.UpdatedById = Guid.Parse(userContext.UserId);
+            model.LastUpdated = DateTime.UtcNow;
+
+            repository.AddItemAsync(model);
+
+            return await repository.ApplySaveChangesAsync() > 0 ? model.Id.ToString() : string.Empty;
         }
 
-        public Task<string> DeleteRoomDetails(Guid id)
+        public async Task<string> DeleteRoomDetails(Guid id)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            if(id == Guid.Empty) return string.Empty;
+
+            var roomDetails = await repository.GetTrackedItemByIdAsync(id);
+            if(roomDetails != null)
+            {
+                result = await repository.DeleteItemAsync(roomDetails.Id);
+            }
+            return result == true ? "Successfully deleted" : "Failed to delete";
         }
 
-        public Task<bool> UpdateAvailableTimeslots(UpdateAvailableTimeslotsRequest request)
+        public async Task<bool> UpdateAvailableTimeslots(UpdateAvailableTimeslotsRequest request)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            if (request == null) throw new ArgumentNullException("Missing request");
+
+            var model = await repository.GetTrackedItemByIdAsync(request.RoomDetailsId, null) ?? throw new ArgumentNullException("Room not found");
+            model.AvailableTimes = request.AvailableTimeslots;
+            repository.UpdateItemAsync(model);
+
+            result = await repository.ApplySaveChangesAsync() > 0;
+            return result;
         }
 
-        public Task<string> UpdateRoomDetails(Guid id, RoomDetailsRequest request)
+        public async Task<string> UpdateRoomDetails(Guid id, RoomDetailsRequest request)
         {
-            throw new NotImplementedException();
+            if (id == Guid.Empty) throw new InvalidDataException("Invaild Room");
+            
+            var model = await repository.GetTrackedItemByIdAsync(id, null) ?? throw new("Cannot find room details");
+            model.AvailableTimes = model.AvailableTimes;
+            model.Name = request.Name;
+            model.Location = request.Location;
+            model.UpdatedBy = userContext.Username;
+            model.UpdatedById = Guid.Parse(userContext.UserId);
+            model.LastUpdated = DateTime.UtcNow;
+
+            repository.UpdateItemAsync(model);
+            var result = await repository.ApplySaveChangesAsync() > 0;
+            return result ? "Successfully updated room details" : "Failed to update room details";
         }
     }
 }

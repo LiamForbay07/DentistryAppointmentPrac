@@ -13,14 +13,4 @@ namespace DentistryAppointmentPrac.Shared.Models
         public Guid? DentalDepartmentId { get; set; }
         public bool HasOfflineBackup { get; set; }
     }
-
-    public class OfflineFile : BaseModel
-    {
-        public Guid? DocumentId { get; set; }
-        public DocumentModel? Document { get; set; }
-        public string FileName { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        public long FileSize { get; set; }
-        public byte[] File { get; set; } = [];
-    }
 }

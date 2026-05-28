@@ -11,8 +11,9 @@ namespace DentistryAppointmentPrac.Shared.Documents.Interfaces
     public interface IDocumentService : IImplementation<DocumentModel, DocumentSummary, DocumentSummary>
     {
         Task<string> UploadFile(IFormFile file);
+        Task<string> UploadQuickImport(IFormFile file);
         Task<string> DownloadFile(Guid id);
-        Task<string> DownloadQuickImport(Guid id);
+        Task<string> DownloadQuickImport(Guid documentId);
         Task<Stream?> StreamFile(Guid id);
         Task<DocumentModel?> GetDocument(Guid id);
         Task<DocumentModel?> GetQuickUploadDocument(Guid id);
