@@ -29,7 +29,10 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Middleware
             if (!principal.Identity?.IsAuthenticated ?? true)
                 return;
 
-            var subjectId = principal.FindFirst(ClaimTypes.Name)?.Value ?? "";
+            var subjectId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                         ?? principal.FindFirst("sub")?.Value
+                         ?? principal.FindFirst("userId")?.Value
+                         ?? "";
 
             if (string.IsNullOrEmpty(subjectId))
                 return;
@@ -41,23 +44,8 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Middleware
                 return;
             }
 
-            var departmentId = "";
-            var isTechSupport = user.Permissions.Contains(PermissionEnum.TechSupport);
-            if (isTechSupport)
-            {
-                var httpContext = _httpContextAccessor.HttpContext;
-                if(httpContext != null)
-                {
-                    departmentId = httpContext.Request.Headers["Department"].ToString();
-                }
-            }
-            else
-            {
-                departmentId = _userContext.DentistDepartmentId.ToString() ?? "";
-            }
-
             _userContext.UserId = user?.Id.ToString() ?? "";
-            _userContext.DentistDepartmentId = Guid.TryParse(departmentId, out Guid depId) ? depId : Guid.NewGuid();
+            //_userContext.DentistDepartmentId = Guid.TryParse(departmentId, out Guid depId) ? depId : Guid.NewGuid();
             _userContext.User = user?.DisplayName ?? "";
             _userContext.Username = user?.Username ?? "";
             _userContext.Permissions = user?.Permissions?.ToList() ?? [];

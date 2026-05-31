@@ -15,7 +15,6 @@ namespace DentistryAppointmentPrac.API
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddScoped<UserContext>();
-            builder.Services.AddSignalR();
             // Add services to the container.
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
@@ -24,14 +23,20 @@ namespace DentistryAppointmentPrac.API
             })
             .AddApplicationPart(typeof(AuthenticationController).Assembly)
             .AddControllersAsServices();
-
+            
+            InitializeHelper.InitializeAppsettingsAndEnvironmentVariables(builder);
             InitializeHelper.InitializeAuthentication(builder);
-
+            InitializeHelper.InitializeServices(builder);
+            InitializeHelper.InitializeRepositories(builder);
+            InitializeHelper.InitializeBusinessLogic(builder);
+            InitializeHelper.InitilizeStorageServices(builder);
+            
+            builder.Services.AddSignalR();
             builder.Services.AddAuthorizationBuilder()
-                .AddPolicy("MultikToken", policy =>
+                .AddPolicy("MultiToken", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.AddAuthenticationSchemes("AzureB2C", "Manual");
+                    policy.AddAuthenticationSchemes("Manual");
                     policy.AddRequirements(new UserContextRequirement());
                 });
 

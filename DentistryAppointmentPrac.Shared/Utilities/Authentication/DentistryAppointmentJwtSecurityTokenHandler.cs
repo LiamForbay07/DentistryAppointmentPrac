@@ -24,6 +24,7 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication
 
             var claims = new List<Claim>
             {
+                new(ClaimTypes.NameIdentifier, userId),
                 new(ClaimTypes.Name, userId),
             };
 

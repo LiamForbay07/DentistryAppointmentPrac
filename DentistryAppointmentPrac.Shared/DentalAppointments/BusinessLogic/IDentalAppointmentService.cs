@@ -12,7 +12,7 @@ namespace DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic
     {
         Task<string> CreateAppointment(DentalAppointmentRequest request);
         Task<List<DentalAppointment>> GetAppointmentByDentistId(Guid dentistId);
-        Task<string> UpdateAppointment(Guid id);
+        Task<string> UpdateAppointment(Guid id, UpdateAppointmentDetailsRequest request);
         Task<string> CancelAppointment(Guid id);
     }
 }

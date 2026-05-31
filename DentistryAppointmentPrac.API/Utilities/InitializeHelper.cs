@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Azure.Storage.Blobs;
+using DentistryAppointmentPrac.API.Utilities.DatabaseContext;
+using DentistryAppointmentPrac.Shared.BusinessLogic;
+using DentistryAppointmentPrac.Shared.DentalAppointments;
+using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
+using DentistryAppointmentPrac.Shared.Interfaces;
+using DentistryAppointmentPrac.Shared.RoomDetails.Repository;
+using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
+using DentistryAppointmentPrac.Shared.Users.Interfaces;
+using DentistryAppointmentPrac.Shared.Utilities.Authentication.BusinessLogic;
+using DentistryAppointmentPrac.Shared.Utilities.Authentication.Interfaces;
+using DentistryAppointmentPrac.Shared.Utilities.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
-using FluentValidation;
 using System.Text;
-using DentistryAppointmentPrac.Shared.Repository.Interfaces;
-using DentistryAppointmentPrac.API.Utilities.DatabaseContext;
-using Azure.Identity;
-using Azure.Storage.Blobs;
-using DentistryAppointmentPrac.Shared.BusinessLogic;
-using DentistryAppointmentPrac.Shared.Interfaces;
-using DentistryAppointmentPrac.Shared.Utilities.Middleware;
-using DentistryAppointmentPrac.Shared.Utilities.Authentication.Interfaces;
-using DentistryAppointmentPrac.Shared.Utilities.Authentication.BusinessLogic;
-using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
-using DentistryAppointmentPrac.Shared.Users.Interfaces;
-using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
-using DentistryAppointmentPrac.Shared.DentalAppointments;
 
 namespace DentistryAppointmentPrac.API.Utilities
 {
@@ -30,15 +27,29 @@ namespace DentistryAppointmentPrac.API.Utilities
                 options.DefaultAuthenticateScheme = "MultiScheme";
                 options.DefaultChallengeScheme = "MultiScheme";
             })
-                    .AddPolicyScheme("MultiScheme", "Multi Scheme", options =>
-                    {
-                        options.ForwardDefaultSelector = context =>
-                        {
-                            return "AzureB2C";
-                        };
-                    })
-                    .AddJwtBearer("Manual", options =>
+            .AddPolicyScheme("MultiScheme", "Multi Scheme", options =>
             {
+                options.ForwardDefaultSelector = context =>
+                {
+                    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                    if (authHeader != null && authHeader.StartsWith("Bearer "))
+                    {
+                        return "Manual";
+                    }
+                    return "Manual";
+                };
+            })
+            .AddJwtBearer("Manual", options =>
+            {
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    }
+                };
+
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -48,18 +59,12 @@ namespace DentistryAppointmentPrac.API.Utilities
                     ValidateIssuer = false,
                     ValidateAudience = false,
                 };
-            })
-            .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"), jwtBearerScheme: "AzureB2C");
-            builder.Services.Configure<JwtBearerOptions>("AzureB2C", options =>
-            {
-                var existingHandler = options.Events?.OnMessageReceived;
-                options.Events = new JwtBearerEvents();
             });
         }
 
         internal static void InitializeRepositories(WebApplicationBuilder builder)
         {
-            var connectionString = builder.Configuration["ConnectionStrings:DentistryConnectionString"];
+            var connectionString = builder.Configuration["ConnectionStrings:ApprointPracDB"];
             if (string.IsNullOrEmpty(connectionString)) {
                 throw new InvalidOperationException("Please provide a connection string in appsettings or environment variables");
             }
@@ -71,6 +76,7 @@ namespace DentistryAppointmentPrac.API.Utilities
             builder.Services.AddScoped<IUserBaseRepository, UserBaseRepository<DentistAppointmentContext>>();
             builder.Services.AddScoped<IUserRepository, UserRepository<DentistAppointmentContext>>();
             builder.Services.AddScoped<IDentalAppointmentRepository, DentalAppointmentRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IRoomRepository, RoomRepository<DentistAppointmentContext>>();
         }
 
         internal static void InitializeAppsettingsAndEnvironmentVariables(WebApplicationBuilder builder)
@@ -121,7 +127,7 @@ namespace DentistryAppointmentPrac.API.Utilities
 
         internal static void InitializeServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
             builder.Services.AddScoped<IAuthorizationHandler, UserContextHandler>();
         }

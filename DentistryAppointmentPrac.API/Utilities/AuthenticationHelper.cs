@@ -12,11 +12,12 @@ namespace DentistryAppointmentPrac.API.Utilities
         {
             if(Guid.TryParse(email, out Guid userId))
             {
-                return await dbContext.User.IgnoreQueryFilters().Include(x => x.Permissions).FirstOrDefaultAsync(x => x.Id == userId);
+                //return await dbContext.User.Where(x => x.Permissions.Any()).FirstOrDefaultAsync(x => x.Id == userId);
+                return await dbContext.User.Where(x => x.Permissions != null && x.Id == userId).FirstOrDefaultAsync();
             }
             else
             {
-                return await dbContext.User.IgnoreQueryFilters().Include(x => x.Permissions).FirstOrDefaultAsync(x => x.Username == email);
+                return await dbContext.User.Where(x => x.Permissions != null && x.Username == email).FirstOrDefaultAsync();
             }
         }
 

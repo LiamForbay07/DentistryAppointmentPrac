@@ -22,58 +22,34 @@ namespace DentistryAppointmentPrac.API.Utilities.DatabaseContext
         {
             base.OnModelCreating(modelBuilder);
 
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DentistAppointmentContext).Assembly);
             modelBuilder.ApplyConfiguration(new ImportProcessDbConfigurations());
-
-            var userId = Guid.NewGuid();
-            var dentistId = Guid.NewGuid();
-            var roomDetailsId = Guid.NewGuid();
+            modelBuilder.ApplyConfiguration(new UserDbConfiguration());
 
             modelBuilder.Entity<User>().HasData(new User()
             {
-                Id = userId,
-                Name = "John",
-                Surname = "Smith",
-                CreatedDate = DateTime.Now,
+                Id = new Guid("36e4feae-93dc-4d48-bd40-2f7459caf773"),
+                Name = "Liam",
+                Surname = "Forbay",
+                CreatedDate = new DateTime(2026, 5, 30, 13, 38, 36, 961, DateTimeKind.Utc),
+                DisplayName = "Liam Forbay",
+                IDNumber = "9707265099086",
                 IsDeleted = false,
-                LastUpdated = null,
-                Password = PasswordHashHelper.HashPassword("Password@11"),
-                Permissions = [PermissionEnum.Admin],
-                Title = "Dr.",
-                Username = "john@smtih@gmail.com",
+                LastUpdated = new DateTime(2026, 5, 30, 13, 38, 36, 961, DateTimeKind.Utc),
+                Password = "um6PP5ICtRSHZ3xQ+jzG+OMU9g4EnJvLexx1nUXG9LMTwsM8Vs6N5De5h5tSX2hwmdIOR1a8OaubxgKd1iIgTQ==" , //Password@12
                 UpdatedBy = "System",
-                UpdatedById = Guid.Empty,
-                UserType = UserType.Dentist
-            });
-
-            modelBuilder.Entity<Dentist>().HasData(new Dentist()
-            {
-                Id = dentistId,
-                Specialization = [DentalSpecializationEnum.General],
-                CreatedDate = DateTime.Now,
-                LastUpdated = null,
-                IsDeleted = false,
-                UpdatedBy = "System",
-                UpdatedById = Guid.Empty,
-                UserId = userId
-            });
-
-            modelBuilder.Entity<RoomDetail>().HasData(new RoomDetail()
-            {
-                Id = roomDetailsId,
-                AvailableTimes = ["9:00-9:30", "9:30-10:00", "10:00-10:30", "10:30-11:00", "11:00-11:30", "13:00-13:30", "13:30-14:00"],
-                Name = "Dental Room 1",
-                Location = "North Wing Room 23",
-                CreatedDate = DateTime.Now,
-                IsDeleted = false,
-                LastUpdated = null,
-                UpdatedBy = "System",
-                UpdatedById = Guid.Empty
+                UpdatedById = null,
+                UserType = UserType.MainUser,
+                Permissions = [PermissionEnum.Admin, PermissionEnum.TechSupport],
+                PasswordExpiryDate = null,
+                Title = "Mr.",
+                Username = "forbay07@gmail.com"
             });
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
+            configurationBuilder.Properties<Enum>().HaveConversion<string>();
             base.ConfigureConventions(configurationBuilder); //Add DbConfigurations here
         }
     }

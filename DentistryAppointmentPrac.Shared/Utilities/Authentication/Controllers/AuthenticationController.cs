@@ -45,7 +45,7 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize(Policy ="MultiToken")]
+        [Authorize(Policy = "MultiToken")]
         public async Task<OkObjectResult> GetMeAsync()
         {
             var result = await implementation.GetMeAsync();

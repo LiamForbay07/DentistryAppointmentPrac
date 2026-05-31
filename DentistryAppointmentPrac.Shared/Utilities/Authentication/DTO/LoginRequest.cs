@@ -8,6 +8,6 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication.DTO
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public bool IsLoginOnBehalf { get; set; } = false;
+        //public bool IsLoginOnBehalf { get; set; } = false;
     }
 }

@@ -66,9 +66,21 @@ namespace DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic
             return [.. dentistAppointments];
         }
 
-        public Task<string> UpdateAppointment(Guid id)
+        public async Task<string> UpdateAppointment(Guid id, UpdateAppointmentDetailsRequest request)
         {
-            throw new NotImplementedException();
+            var appointment = await repository.GetItemByIdAsync(id) ?? throw new NullReferenceException("Appointment not available");
+            appointment.AppointmentDate = request.AppointmentDate;
+            appointment.AppointmentTimeslot = request.AppointmentTimeslot;
+            appointment.DentistId = request.DentistId;
+            appointment.UserId = request.UserId;
+            appointment.LastUpdated = DateTime.UtcNow;
+            appointment.UpdatedBy = userContext.Username;
+            appointment.UpdatedById = Guid.Parse(userContext.UserId);
+
+            repository.UpdateItemAsync(appointment);
+            bool result = await repository.ApplySaveChangesAsync() > 0;
+            return result ? $"Updated appointment successfully to {request.AppointmentDate} : {request.AppointmentTimeslot} : Room {appointment.RoomDetails?.Name}":
+                            "Failed to update appointment";
         }
     }
 }

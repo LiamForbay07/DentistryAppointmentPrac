@@ -29,7 +29,6 @@ namespace DentistryAppointmentPrac.Shared.Models
         public DateTime? PasswordExpiryDate { get; set; }
         [CsvColumn("ID Number")]
         public string IDNumber { get; set; } = string.Empty;
-        public virtual Dentist? Dentist { get; set; }
     }
 
     public enum UserType
@@ -37,6 +36,7 @@ namespace DentistryAppointmentPrac.Shared.Models
         Patient,
         Dentist,
         DentalAssistant,
+        MainUser
     }
 
     public enum PermissionEnum
