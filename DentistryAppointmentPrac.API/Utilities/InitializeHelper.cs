@@ -4,6 +4,7 @@ using DentistryAppointmentPrac.Shared.BusinessLogic;
 using DentistryAppointmentPrac.Shared.DentalAppointments;
 using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Interfaces;
+using DentistryAppointmentPrac.Shared.OLlamAi.BusinessLogic;
 using DentistryAppointmentPrac.Shared.RoomDetails.Repository;
 using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
 using DentistryAppointmentPrac.Shared.Users.Interfaces;
@@ -117,6 +118,11 @@ namespace DentistryAppointmentPrac.API.Utilities
                 //builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
                 //builder.Services.AddScoped<IDocumentImplementation, DocumentImplementation>();
             }
+        }
+
+        internal static void InitializeAiServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IOLlamAiService, OLlamAiService>();
         }
 
         internal static void InitializeBusinessLogic(WebApplicationBuilder builder)

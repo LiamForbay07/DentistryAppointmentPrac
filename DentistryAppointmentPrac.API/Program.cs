@@ -29,6 +29,7 @@ namespace DentistryAppointmentPrac.API
             InitializeHelper.InitializeServices(builder);
             InitializeHelper.InitializeRepositories(builder);
             InitializeHelper.InitializeBusinessLogic(builder);
+            InitializeHelper.InitializeAiServices(builder);
             InitializeHelper.InitilizeStorageServices(builder);
             
             builder.Services.AddSignalR();
