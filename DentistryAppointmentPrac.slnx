@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="DentistryAppointmentPrac.API/DentistryAppointmentPrac.API.csproj" />
+  <Project Path="DentistryAppointmentPrac.Payment.Api/DentistryAppointmentPrac.Payment.Api.csproj" Id="60e51d0a-0acf-4c4c-989a-3e12094c1c12" />
   <Project Path="DentistryAppointmentPrac.Shared/DentistryAppointmentPrac.Shared.csproj" />
   <Project Path="Ollama.LLMModelService/Ollama.LLMModelService.csproj" Id="5a8afb2a-4295-4472-8bcc-ea2d3b83c8e9" />
 </Solution>

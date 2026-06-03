@@ -5,7 +5,11 @@ using DentistryAppointmentPrac.Shared.DentalAppointments;
 using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Interfaces;
 using DentistryAppointmentPrac.Shared.OLlamAi.BusinessLogic;
+using DentistryAppointmentPrac.Shared.Patients;
+using DentistryAppointmentPrac.Shared.Patients.BusinessLogic;
+using DentistryAppointmentPrac.Shared.RoomDetails.BusinessLogic;
 using DentistryAppointmentPrac.Shared.RoomDetails.Repository;
+using DentistryAppointmentPrac.Shared.Users.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
 using DentistryAppointmentPrac.Shared.Users.Interfaces;
 using DentistryAppointmentPrac.Shared.Utilities.Authentication.BusinessLogic;
@@ -16,6 +20,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DentistryAppointmentPrac.Shared.Documents.Repository;
+using DentistryAppointmentPrac.Shared.Documents.Interfaces;
+using DentistryAppointmentPrac.Shared.Documents.BusinessLogic;
+using DentistryAppointmentPrac.Shared.OfflineFiles.Interfaces;
+using DentistryAppointmentPrac.Shared.OfflineFiles.Repository;
 
 namespace DentistryAppointmentPrac.API.Utilities
 {
@@ -78,6 +87,9 @@ namespace DentistryAppointmentPrac.API.Utilities
             builder.Services.AddScoped<IUserRepository, UserRepository<DentistAppointmentContext>>();
             builder.Services.AddScoped<IDentalAppointmentRepository, DentalAppointmentRepository<DentistAppointmentContext>>();
             builder.Services.AddScoped<IRoomRepository, RoomRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IDocumentRepository, DocumentRepository<DentistAppointmentContext>>();
+            builder.Services.AddScoped<IOfflineFileRepository, OfflineFileRepository<DentistAppointmentContext>>();
         }
 
         internal static void InitializeAppsettingsAndEnvironmentVariables(WebApplicationBuilder builder)
@@ -129,6 +141,10 @@ namespace DentistryAppointmentPrac.API.Utilities
         {
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IDentalAppointmentService, DentalAppointmentService>();
+            builder.Services.AddScoped<IDocumentService, DocumentService>();
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IPatientService, PatientService>();
+            builder.Services.AddScoped<IUserService, UserService>();
         }
 
         internal static void InitializeServices(WebApplicationBuilder builder)

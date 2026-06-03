@@ -30,7 +30,7 @@ namespace DentistryAppointmentPrac.API
             InitializeHelper.InitializeRepositories(builder);
             InitializeHelper.InitializeBusinessLogic(builder);
             InitializeHelper.InitializeAiServices(builder);
-            InitializeHelper.InitilizeStorageServices(builder);
+            //InitializeHelper.InitilizeStorageServices(builder);
             
             builder.Services.AddSignalR();
             builder.Services.AddAuthorizationBuilder()
@@ -61,6 +61,9 @@ namespace DentistryAppointmentPrac.API
             });
 
             app.UseHttpsRedirection();
+
+            InitializeDocumentControllers.MapDocumentControllers(app);
+
             app.UseAuthentication();
             app.UseAuthorization();
 

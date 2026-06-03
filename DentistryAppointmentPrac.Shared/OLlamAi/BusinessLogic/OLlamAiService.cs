@@ -1,10 +1,5 @@
 ﻿using DentistryAppointmentPrac.Shared.OLlamAi.DTO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using OllamaSharp;
-using OllamaSharp.Models.Chat;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.OLlamAi.BusinessLogic

@@ -30,6 +30,10 @@
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.6.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.7" />
     <PackageReference Include="OllamaSharp" Version="5.4.25" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.27.0.140913">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
@@ -39,7 +43,6 @@
     <Folder Include="DentalAppointments\BusinessLogic\Interfaces\" />
     <Folder Include="DentalAppointments\Configuration\" />
     <Folder Include="OfflineFiles\BusinessLogic\" />
-    <Folder Include="OfflineFiles\Repository\" />
     <Folder Include="Patients\Configuration\" />
   </ItemGroup>
 

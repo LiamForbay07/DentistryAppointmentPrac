@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.Documents.Repository
 {
-    public class DocumentRepository<T>(T dbContext, UserContext userContext) : BaseWritableRepository<DocumentModel, DocumentSummary>(dbContext, userContext)
+    public class DocumentRepository<T>(T dbContext, UserContext userContext) : BaseWritableRepository<DocumentModel, DocumentSummary>(dbContext, userContext), IDocumentRepository
         where T: DbContext
     {
     }

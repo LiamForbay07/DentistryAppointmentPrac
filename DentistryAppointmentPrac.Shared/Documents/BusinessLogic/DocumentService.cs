@@ -14,20 +14,20 @@ using System.Text;
 namespace DentistryAppointmentPrac.Shared.Documents.BusinessLogic
 {
     //Can do online and offline files
-    public class DocumentService(IDocumentRepository repository,IOfflineFileRepository offlineFileRepo, PrivateClient privateClient, UserContext userContext, PublicClient? publicClient) : BaseWriteableImplementation<DocumentModel, DocumentSummary, DocumentSummary, DocumentRequest>(repository), IDocumentService
+    public class DocumentService(IDocumentRepository repository,IOfflineFileRepository offlineFileRepo, /*PrivateClient privateClient,*/ UserContext userContext/*, PublicClient? publicClient*/) : BaseWriteableImplementation<DocumentModel, DocumentSummary, DocumentSummary, DocumentRequest>(repository), IDocumentService
     {
         public async Task<string> DownloadFile(Guid id)
         {
             var document = await repository.GetItemByIdAsync(id);
             if (document == null) return "";
 
-            var blobClient = privateClient.Client.GetBlobClient(document.DocumentEntry);
-            if (!await blobClient.ExistsAsync())
-                return "";
+            //var blobClient = privateClient.Client.GetBlobClient(document.DocumentEntry);
+            //if (!await blobClient.ExistsAsync())
+            //    return "";
 
             var sasBuilder = new BlobSasBuilder
             {
-                BlobContainerName = privateClient.Client.Name,
+                //BlobContainerName = privateClient.Client.Name,
                 BlobName = document.DocumentEntry,
                 Resource = "b",
                 StartsOn = DateTimeOffset.UtcNow.AddMinutes(-1),
@@ -35,8 +35,9 @@ namespace DentistryAppointmentPrac.Shared.Documents.BusinessLogic
             };
 
             sasBuilder.SetPermissions(BlobAccountSasPermissions.Read);
-            var sasUri = blobClient.GenerateSasUri(sasBuilder);
-            return sasUri.ToString();
+            //var sasUri = blobClient.GenerateSasUri(sasBuilder);
+            //return sasUri.ToString();
+            return "";
         }
 
         public async Task<string> DownloadQuickImport(Guid documentId)
