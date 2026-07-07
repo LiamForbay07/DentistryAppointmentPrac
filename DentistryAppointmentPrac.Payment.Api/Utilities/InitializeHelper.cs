@@ -2,7 +2,6 @@
 using DentistryAppointmentPrac.API.Utilities;
 using DentistryAppointmentPrac.Payment.Api.Utilities.Database;
 using DentistryAppointmentPrac.Shared.BusinessLogic;
-using DentistryAppointmentPrac.Shared.DentalAppointments;
 using DentistryAppointmentPrac.Shared.DentalAppointments.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Documents.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Documents.Interfaces;
@@ -11,10 +10,8 @@ using DentistryAppointmentPrac.Shared.Interfaces;
 using DentistryAppointmentPrac.Shared.OfflineFiles.Interfaces;
 using DentistryAppointmentPrac.Shared.OfflineFiles.Repository;
 using DentistryAppointmentPrac.Shared.OLlamAi.BusinessLogic;
-using DentistryAppointmentPrac.Shared.Patients;
 using DentistryAppointmentPrac.Shared.Patients.BusinessLogic;
 using DentistryAppointmentPrac.Shared.RoomDetails.BusinessLogic;
-using DentistryAppointmentPrac.Shared.RoomDetails.Repository;
 using DentistryAppointmentPrac.Shared.Users.BusinessLogic;
 using DentistryAppointmentPrac.Shared.Users.BusinessLogic.Repository;
 using DentistryAppointmentPrac.Shared.Users.Interfaces;
@@ -99,9 +96,6 @@ namespace DentistryAppointmentPrac.Payment.Api.Utilities
                    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
                 builder.Configuration.AddEnvironmentVariables();
-
-                //string keyVaultUri = builder.Configuration["KeyVaultUrl"];
-                //builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
             }
         }
 

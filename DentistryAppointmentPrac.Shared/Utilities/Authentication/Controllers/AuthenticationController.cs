@@ -1,4 +1,6 @@
 ﻿using DentistryAppointmentPrac.Shared.Models;
+using DentistryAppointmentPrac.Shared.Users.DTO;
+using DentistryAppointmentPrac.Shared.Users.Interfaces;
 using DentistryAppointmentPrac.Shared.Utilities.Authentication.DTO;
 using DentistryAppointmentPrac.Shared.Utilities.Authentication.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +15,10 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication.Controllers
     [Route("auth")]
     public class AuthenticationController : BaseController<IAuthenticationService>
     {
-        public AuthenticationController(IAuthenticationService implementation) : base(implementation) { }
+        private readonly IUserService _userService;
+        public AuthenticationController(IAuthenticationService implementation, IUserService userService) : base(implementation) { 
+            _userService = userService;
+        }
 
         [HttpPost("login")]
         public async Task<OkObjectResult> Login(LoginRequest request)
@@ -26,6 +31,13 @@ namespace DentistryAppointmentPrac.Shared.Utilities.Authentication.Controllers
                 Expires = DateTimeOffset.UtcNow.AddHours(1)
             });
             return new OkObjectResult(new { Token = token, Success = true });
+        }
+
+        [HttpPost("register-user")]
+        public async Task<ActionResult> RegisterUser(UserRequest request)
+        {
+            var result = await _userService.CreateUser(request);
+            return !string.IsNullOrEmpty(result) ? Ok(result) : BadRequest("Failed to create user");
         }
 
         [HttpPost("{id}/reset-password")]

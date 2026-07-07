@@ -34,15 +34,17 @@ namespace DentistryAppointmentPrac.Shared.RoomDetails.BusinessLogic
             {
                 result = await repository.DeleteItemAsync(roomDetails.Id);
             }
-            return result == true ? "Successfully deleted" : "Failed to delete";
+            return result ? "Successfully deleted" : "Failed to delete";
         }
 
         public async Task<bool> UpdateAvailableTimeslots(UpdateAvailableTimeslotsRequest request)
         {
             bool result = false;
-            if (request == null) throw new ArgumentNullException("Missing request");
+            ArgumentNullException.ThrowIfNull(request);
 
-            var model = await repository.GetTrackedItemByIdAsync(request.RoomDetailsId, null) ?? throw new ArgumentNullException("Room not found");
+            var model = await repository.GetTrackedItemByIdAsync(request.RoomDetailsId, null);
+            ArgumentNullException.ThrowIfNull(model);
+
             model.AvailableTimes = request.AvailableTimeslots;
             repository.UpdateItemAsync(model);
 
@@ -53,9 +55,11 @@ namespace DentistryAppointmentPrac.Shared.RoomDetails.BusinessLogic
         public async Task<string> UpdateRoomDetails(Guid id, RoomDetailsRequest request)
         {
             if (id == Guid.Empty) throw new InvalidDataException("Invaild Room");
-            
-            var model = await repository.GetTrackedItemByIdAsync(id, null) ?? throw new("Cannot find room details");
-            model.AvailableTimes = model.AvailableTimes;
+
+            var model = await repository.GetTrackedItemByIdAsync(id, null);
+            ArgumentNullException.ThrowIfNull(model);
+
+            model.AvailableTimes = request.AvailableTimes;
             model.Name = request.Name;
             model.Location = request.Location;
             model.UpdatedBy = userContext.Username;

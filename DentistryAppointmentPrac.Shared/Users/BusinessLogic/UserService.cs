@@ -32,6 +32,16 @@ namespace DentistryAppointmentPrac.Shared.Users.BusinessLogic
             return result;
         }
 
+        public async Task<UserBasicSummary?> GetBasicUserDetails(Guid id)
+        {
+            if(id == Guid.Empty) ArgumentNullException.ThrowIfNull("Invalid user");
+
+            var user = await repository.GetItemByIdAsync(id);
+            
+            if(user == null) return null;
+            return UserBasicSummary.FromEntity(user);
+        }
+
         public Task<string> ImportUser(Guid id, ImportRequest request)
         {
             throw new NotImplementedException(); //Quick Import and save to file stream

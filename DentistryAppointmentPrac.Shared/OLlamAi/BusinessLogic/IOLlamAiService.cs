@@ -12,5 +12,6 @@ namespace DentistryAppointmentPrac.Shared.OLlamAi.BusinessLogic
         Task<string> GenerateResponse(AiUserRequest request);
         IAsyncEnumerable<string> GenerateLiveResponse(AiUserRequest request);
         IAsyncEnumerable<string> StreamChatAsync(List<DTO.ChatMessage> messages);
+        IAsyncEnumerable<string> GenerateResponseFromModelWithHarness(List<DTO.ChatMessage> messages);
     }
 }

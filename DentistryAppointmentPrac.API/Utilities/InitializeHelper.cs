@@ -25,6 +25,8 @@ using DentistryAppointmentPrac.Shared.Documents.Interfaces;
 using DentistryAppointmentPrac.Shared.Documents.BusinessLogic;
 using DentistryAppointmentPrac.Shared.OfflineFiles.Interfaces;
 using DentistryAppointmentPrac.Shared.OfflineFiles.Repository;
+using DentistryAppointmentPrac.Shared.OLlamAi.AIHarnessLogic;
+using OllamaSharp;
 
 namespace DentistryAppointmentPrac.API.Utilities
 {
@@ -134,7 +136,22 @@ namespace DentistryAppointmentPrac.API.Utilities
 
         internal static void InitializeAiServices(WebApplicationBuilder builder)
         {
+            // Register IOllamaApiClient from OllamaSharp
+            var ollamaSection = builder.Configuration.GetSection("OllamaApiClient");
+            var baseUrl = ollamaSection["BaseUrl"] ?? "http://localhost:11434";
+            var defaultModel = ollamaSection["defaultModel"] ?? "gemma2";
+
+            builder.Services.AddSingleton<IOllamaApiClient>(serviceProvider =>
+            {
+                var client = new OllamaApiClient(new Uri(baseUrl))
+                {
+                    SelectedModel = defaultModel
+                };
+                return client;
+            });
+
             builder.Services.AddScoped<IOLlamAiService, OLlamAiService>();
+            builder.Services.AddScoped<DentalAIHarness>();
         }
 
         internal static void InitializeBusinessLogic(WebApplicationBuilder builder)

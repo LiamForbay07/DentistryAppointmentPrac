@@ -15,5 +15,6 @@ namespace DentistryAppointmentPrac.Shared.Users.Interfaces
         Task<bool> DeleteUser(Guid id);
         Task<bool> ResetPassword(Guid id, string password);
         Task<string> ImportUser(Guid id, ImportRequest request);
+        Task<UserBasicSummary?> GetBasicUserDetails(Guid id);
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DentistryAppointmentPrac.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("ollama-llm")]
     [ApiController]
     [Authorize(Policy ="MultiToken")]
     public class OLLamaAIModelApiController : ControllerBase
@@ -17,17 +17,16 @@ namespace DentistryAppointmentPrac.API.Controllers
             _olLamaAiService = olLamaAiService;
         }
 
-        [HttpPost("generate-response")]
-        public async Task<IActionResult> GenerateResponse([FromBody] /*AiUserRequest request*/ List<ChatMessage> request)
+        [HttpPost("generate-response-with-system-prompt")] //Trained model
+        public async Task<IActionResult> GenerateResponse([FromBody] List<ChatMessage> request)
         {
-            //var response = await _olLamaAiService.GenerateResponse(request);
             var response =  _olLamaAiService.StreamChatAsync(request);
             return Ok(new { Response = response });
         }
 
 
-        [HttpPost("chat-stream")]
-        public async Task ChatStream([FromBody] AiUserRequest request)
+        [HttpPost("generate-untrained-response")]
+        public async Task ChatStream([FromBody] AiUserRequest request) //Untrained model
         {
             Response.ContentType = "text/event-stream";
             Response.Headers.Append("Cache-Control", "no-cache");
@@ -40,5 +39,12 @@ namespace DentistryAppointmentPrac.API.Controllers
             }
         }
 
+        //For model that uses harness:
+        [HttpPost("generate-response-with-harness")]
+        public async Task<IActionResult> GenerateResponseFromModelWithHarness([FromBody] List<ChatMessage> messages)
+        {
+            var response = _olLamaAiService.GenerateResponseFromModelWithHarness(messages);
+            return Ok(new { Response = response });
+        }
     }
 }
