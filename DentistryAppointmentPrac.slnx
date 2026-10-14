@@ -1,6 +1,7 @@
 <Solution>
-  <Project Path="DentistryAppointmentPrac.API/DentistryAppointmentPrac.API.csproj" />
-  <Project Path="DentistryAppointmentPrac.Payment.Api/DentistryAppointmentPrac.Payment.Api.csproj" Id="60e51d0a-0acf-4c4c-989a-3e12094c1c12" />
-  <Project Path="DentistryAppointmentPrac.Shared/DentistryAppointmentPrac.Shared.csproj" />
-  <Project Path="Ollama.LLMModelService/Ollama.LLMModelService.csproj" Id="5a8afb2a-4295-4472-8bcc-ea2d3b83c8e9" />
+  <Project Path="../../../../../../../../practiceProject/DentistryAppointmentPrac/DentistryAppointmentPrac.API/DentistryAppointmentPrac.API.csproj" />
+  <Project Path="../../../../../../../../practiceProject/DentistryAppointmentPrac/DentistryAppointmentPrac.Payment.Api/DentistryAppointmentPrac.Payment.Api.csproj" Id="60e51d0a-0acf-4c4c-989a-3e12094c1c12" />
+  <Project Path="../../../../../../../../practiceProject/DentistryAppointmentPrac/DentistryAppointmentPrac.Shared/DentistryAppointmentPrac.Shared.csproj" />
+  <Project Path="../../../../../../../../practiceProject/DentistryAppointmentPrac/DentistryAppointmentPrac.Tests/DentistryAppointmentPrac.Tests.csproj" Id="73128f4a-8957-445d-b08f-55077008a12b" />
+  <Project Path="../../../../../../../../practiceProject/DentistryAppointmentPrac/Ollama.LLMModelService/Ollama.LLMModelService.csproj" Id="5a8afb2a-4295-4472-8bcc-ea2d3b83c8e9" />
 </Solution>

@@ -1,7 +1,6 @@
 ﻿using DentistryAppointmentPrac.Shared.OLlamAi.AIHarnessLogic;
 using DentistryAppointmentPrac.Shared.OLlamAi.DTO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using OllamaSharp;
 using System.Text;
 

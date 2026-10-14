@@ -1,0 +1,19 @@
+{
+  "EvalData": 
+  [
+    {
+      "name": "Business Hours",
+      "input": "What time are you open?",
+      "mustContain": [ "8am", "5pm" ]
+    },
+    {
+      "name": "Service Types",
+      "input": "Services?",
+      "mustContain": [
+        "general dentistry",
+        "orthodontics",
+        "cosmetic dentistry"
+      ]
+    }
+  ]
+}

@@ -17,12 +17,12 @@ namespace DentistryAppointmentPrac.API.Controllers
             _olLamaAiService = olLamaAiService;
         }
 
-        [HttpPost("generate-response-with-system-prompt")] //Trained model
-        public async Task<IActionResult> GenerateResponse([FromBody] List<ChatMessage> request)
-        {
-            var response =  _olLamaAiService.StreamChatAsync(request);
-            return Ok(new { Response = response });
-        }
+        //[HttpPost("generate-response-with-system-prompt")] //Trained model
+        //public async Task<IActionResult> GenerateResponse([FromBody] List<ChatMessage> request)
+        //{
+        //    var response =  _olLamaAiService.StreamChatAsync(request);
+        //    return Ok(new { Response = response });
+        //}
 
 
         [HttpPost("generate-untrained-response")]

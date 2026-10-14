@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace DentistryAppointmentPrac.API
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -30,6 +30,7 @@ namespace DentistryAppointmentPrac.API
             InitializeHelper.InitializeRepositories(builder);
             InitializeHelper.InitializeBusinessLogic(builder);
             InitializeHelper.InitializeAiServices(builder);
+            InitializeHelper.InitializeValidators(builder);
             //InitializeHelper.InitilizeStorageServices(builder);
             
             builder.Services.AddSignalR();
@@ -47,10 +48,6 @@ namespace DentistryAppointmentPrac.API
             var app = builder.Build();
             app.UseMiddleware<ExceptionMiddleware>();
             // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.MapOpenApi();
-            //}
             app.MapOpenApi();
             app.MapScalarApiReference(options =>
             {

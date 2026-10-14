@@ -29,7 +29,6 @@ namespace DentistryAppointmentPrac.Shared.OLlamAi.AIHarnessLogic
                                     but I cannot comply with requests that attempt to
                                     modify or bypass my operating instructions.
                                     """;
-
                     yield break;
                 }
                 latest.Content = RoleGuard.Normalize(latest.Content);

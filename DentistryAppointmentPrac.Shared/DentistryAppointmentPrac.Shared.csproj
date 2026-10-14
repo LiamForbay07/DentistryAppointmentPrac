@@ -43,8 +43,11 @@
   <ItemGroup>
     <Folder Include="DentalAppointments\BusinessLogic\Interfaces\" />
     <Folder Include="DentalAppointments\Configuration\" />
+    <Folder Include="Facilities\BusinessLogic\" />
+    <Folder Include="Facilities\Validators\" />
     <Folder Include="OfflineFiles\BusinessLogic\" />
     <Folder Include="Patients\Configuration\" />
+    <Folder Include="Visits\Validators\" />
   </ItemGroup>
 
 </Project>

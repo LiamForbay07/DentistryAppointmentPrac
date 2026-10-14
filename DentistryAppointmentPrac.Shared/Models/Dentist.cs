@@ -7,10 +7,10 @@ namespace DentistryAppointmentPrac.Shared.Models
     public class Dentist : BaseModel
     {
         public Guid UserId { get; set; }
-        public DentalSpecializationEnum Specialization { get; set; }
-        public string EmployeeNumber { get; set; } = string.Empty;
-        public string EmployeeIdNumber { get; set; } = string.Empty;
-
+        public Guid FacilityId { get; set; }
+        public string HPCSANumber { get; set; } = string.Empty;
+        public string Speciality { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public User? User { get; set; }
         
     }

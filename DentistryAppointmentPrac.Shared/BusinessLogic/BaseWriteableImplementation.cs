@@ -2,9 +2,6 @@
 using DentistryAppointmentPrac.Shared.Interfaces;
 using DentistryAppointmentPrac.Shared.Models;
 using DentistryAppointmentPrac.Shared.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DentistryAppointmentPrac.Shared.BusinessLogic
 {
@@ -24,16 +21,12 @@ namespace DentistryAppointmentPrac.Shared.BusinessLogic
                 return model.Id.ToString();
             }
             else
-                throw new Exception("Something went wrong");
+                throw new Exception("Something went wrong")!;
         }
 
         public virtual async Task<TResponse?> DefaultUpdateAsync(Guid id, TRequest request, string? searchReduce)
         {
-            var model = await repository.GetTrackedAsync(id);
-            if (model == null)
-            {
-                throw new Exception("Field not found");
-            }
+            var model = await repository.GetTrackedAsync(id) ?? throw new Exception("Field not found")!;
 
             model.CurrentValues.SetValues(request);
             await repository.ApplySaveChangesAsync();

@@ -27,6 +27,8 @@ using DentistryAppointmentPrac.Shared.OfflineFiles.Interfaces;
 using DentistryAppointmentPrac.Shared.OfflineFiles.Repository;
 using DentistryAppointmentPrac.Shared.OLlamAi.AIHarnessLogic;
 using OllamaSharp;
+using DentistryAppointmentPrac.Shared.Patients.Validators;
+using FluentValidation;
 
 namespace DentistryAppointmentPrac.API.Utilities
 {
@@ -169,6 +171,12 @@ namespace DentistryAppointmentPrac.API.Utilities
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
             builder.Services.AddScoped<IAuthorizationHandler, UserContextHandler>();
+        }
+
+        internal static void InitializeValidators(WebApplicationBuilder builder)
+        {
+            builder.Services.AddValidatorsFromAssemblyContaining<CreatePatientValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<UpdatePatientValidator>();
         }
     }
 }

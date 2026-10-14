@@ -24,11 +24,15 @@ namespace DentistryAppointmentPrac.Shared.Repository
             if (entity != null)
             {
                 entity.IsDeleted = true;
+                entity.UpdatedBy = userContext.Username;
+                entity.UpdatedById = Guid.Parse(userContext.UserId);
+                entity.LastUpdated = DateTime.UtcNow;
+
                 result = await _dbContext.SaveChangesAsync() > 0;
             }
             else
             {
-                throw new Exception("Model not found");
+                result = false;
             }
             return result;
         }
